@@ -1,0 +1,24 @@
+{
+  "author" : "",
+  "commands" : [
+    {
+      "script" : "script.cocoascript",
+      "name" : "slice-maker",
+      "handlers" : {
+        "run" : "onRun"
+      },
+      "identifier" : "com.bohemiancoding.sketch.runscriptidentifier"
+    }
+  ],
+  "menu" : {
+    "items" : [
+      "com.bohemiancoding.sketch.runscriptidentifier"
+    ],
+    "title" : "slice-maker"
+  },
+  "identifier" : "com.example.sketch.439afe12-c54d-4816-9ffd-07001bcddbac",
+  "version" : "1.0",
+  "description" : "",
+  "authorEmail" : "",
+  "name" : "slice-maker"
+}

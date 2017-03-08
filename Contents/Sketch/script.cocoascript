@@ -1,0 +1,74 @@
+var onRun = function(context) {
+  var doc = context.document
+  var selectedLayers = context.selection;
+
+  if (selectedLayers.length != 1) {
+  	[doc showMessage: "Select exactly one layer"];
+  	return;
+  }
+
+  var selectedLayer = selectedLayers[0];
+
+  var group = moveIntoGroup(doc, selectedLayer);
+
+  var rectangle = makeBgRect(group, selectedLayer);
+  var slice = makeSlice(rectangle, selectedLayer);
+};
+
+function getParent(layer) {
+  var ancestors = [layer ancestors];
+
+  if ([ancestors count] < 1) {
+    [doc showMessage: "Not enough ancestors"];
+    return;
+  }
+  var parent = ancestors[[ancestors count] - 1 ];
+  return parent;
+}
+
+
+function moveIntoGroup(doc, selectedLayer) {
+	var group = [[MSLayerGroup alloc] init];
+	[group setName: [selectedLayer name]];
+
+	//[[doc currentPage] insertLayers: [group] beforeLayer: selectedLayer];
+	var parent = getParent(selectedLayer);
+	[parent insertLayers: [group] beforeLayer: selectedLayer];
+
+	[MSLayerGroup moveLayers: [selectedLayer] intoGroup: group];
+
+	return group;
+}
+
+
+function makeBgRect(group, selectedLayer) {
+    var rectangle = [[MSRectangleShape alloc] init];
+    [rectangle setName: "BG"];
+
+	var sourceFrame = [selectedLayer frame];
+	var targetFrame = [rectangle frame];
+	[targetFrame setWidth: [sourceFrame width]];
+	[targetFrame setHeight: [sourceFrame height]];
+	[targetFrame setX:      [sourceFrame x]];
+	[targetFrame setY:      [sourceFrame y]];
+
+	var shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
+	// 1 = fill
+	// http://mail.sketchplugins.com/pipermail/dev_sketchplugins.com/2016-May/003781.html
+	var fill = [[shapeGroup style] addStylePartOfType: 1];
+
+	var nsColor = [NSColor colorWithWhite: 1.0 alpha: 0.0]; // full white, no alpha
+	var msColor = [MSColor colorWithNSColor: nsColor];
+	[fill setColor: msColor];
+
+    [group insertLayers: [shapeGroup] beforeLayer: selectedLayer];
+
+    return shapeGroup;
+}
+
+function makeSlice(rectangle, selectedLayer) {
+  var slice = [MSSliceLayer sliceLayerFromLayer: rectangle];
+  [slice setName: [selectedLayer name]];
+
+  return;
+}
