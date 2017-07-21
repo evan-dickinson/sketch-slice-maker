@@ -85,7 +85,8 @@ function makeSlice(rectangle, selectedLayer) {
   setSizeAndPosition(selectedLayer, slice);
 
   var exportOptions = [slice exportOptions];
-
+  // Don't trim extra pixels from this slice
+  exportOptions.shouldTrim = 0;
 
   return;
 }
