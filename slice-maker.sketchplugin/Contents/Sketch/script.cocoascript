@@ -18,6 +18,10 @@ var onRun = function(context) {
 
   var rectangle = makeBgRect(group, selectedLayer);
   var slice = makeSlice(rectangle, selectedLayer);
+
+  // Fixes bug where the new group is not selectable
+  // http://sketchplugins.com/d/261-inserted-layer-not-selectable
+  group.resizeToFitChildrenWithOption(0);
 };
 
 function getParent(layer) {
