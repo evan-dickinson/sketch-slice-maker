@@ -1,3 +1,8 @@
+// TODO:
+// - Run on multiple selected layers at once
+// - Set the slice to SVG (or maybe just do this w/ Sketch defaults)
+// - If selected layer already has an export, disable it
+
 var onRun = function(context) {
   var doc = context.document
   var selectedLayers = context.selection;
@@ -74,6 +79,9 @@ function makeSlice(rectangle, selectedLayer) {
   var slice = [MSSliceLayer sliceLayerFromLayer: rectangle];
   [slice setName: [selectedLayer name]];
   setSizeAndPosition(selectedLayer, slice);
+
+  var exportOptions = [slice exportOptions];
+
 
   return;
 }
