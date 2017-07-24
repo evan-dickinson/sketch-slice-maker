@@ -53,7 +53,7 @@ function moveIntoGroup(doc, selectedLayer) {
 function setSizeAndPosition(source, target) {
 	var sourceFrame = [source frame];
 	var targetFrame = [target frame];
-	[targetFrame setWidth: [sourceFrame width]];
+	[targetFrame setWidth:  [sourceFrame width]];
 	[targetFrame setHeight: [sourceFrame height]];
 	[targetFrame setX:      [sourceFrame x]];
 	[targetFrame setY:      [sourceFrame y]];
@@ -74,9 +74,9 @@ function makeBgRect(group, selectedLayer) {
 	var msColor = [MSColor colorWithNSColor: nsColor];
 	[fill setColor: msColor];
 
-    [group insertLayers: [shapeGroup] beforeLayer: selectedLayer];
+  [group insertLayers: [shapeGroup] beforeLayer: selectedLayer];
 
-    return shapeGroup;
+  return shapeGroup;
 }
 
 function makeSlice(rectangle, selectedLayer) {
@@ -87,6 +87,13 @@ function makeSlice(rectangle, selectedLayer) {
   var exportOptions = [slice exportOptions];
   // Don't trim extra pixels from this slice
   exportOptions.shouldTrim = 0;
+
+  // Set "Export group contents only"
+  // http://sketchplugins.com/d/308-set-export-group-contents-only
+  if (slice.parentGroup().class() == "MSLayerGroup") {
+    slice.exportOptions().setLayerOptions(2);
+    context.document.reloadInspector();
+}
 
   return;
 }
