@@ -4,25 +4,33 @@
 // - If selected layer already has an export, disable it
 
 var onRun = function(context) {
-  var doc = context.document
   var selectedLayers = context.selection;
+  var doc = context.document
 
-  if (selectedLayers.length != 1) {
-  	[doc showMessage: "Select exactly one layer"];
-  	return;
+  if (selectedLayers.length < 1) {
+    [doc showMessage: "Select one or more layers"];
+    return;
   }
 
-  var selectedLayer = selectedLayers[0];
+  for (var idx = 0; idx < selectedLayers.length; idx++) {
+    var currLayer = selectedLayers[idx];
+    doLayer(context, currLayer);
+  }
+};
 
-  var group = moveIntoGroup(doc, selectedLayer);
+function doLayer(context, layer) {
+  var doc = context.document
 
-  var rectangle = makeBgRect(group, selectedLayer);
-  var slice = makeSlice(rectangle, selectedLayer);
+  var group = moveIntoGroup(doc, layer);
+
+  var rectangle = makeBgRect(group, layer);
+  var slice = makeSlice(context, rectangle, layer);
 
   // Fixes bug where the new group is not selectable
   // http://sketchplugins.com/d/261-inserted-layer-not-selectable
   group.resizeToFitChildrenWithOption(0);
-};
+}
+
 
 function getParent(layer) {
   var ancestors = [layer ancestors];
@@ -79,7 +87,7 @@ function makeBgRect(group, selectedLayer) {
   return shapeGroup;
 }
 
-function makeSlice(rectangle, selectedLayer) {
+function makeSlice(context, rectangle, selectedLayer) {
   var slice = [MSSliceLayer sliceLayerFromLayer: rectangle];
   [slice setName: [selectedLayer name]];
   setSizeAndPosition(selectedLayer, slice);
